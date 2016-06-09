@@ -25,9 +25,11 @@ void setup() {
 #endif
   // End of trinket special code
 
-  Serial.begin(115200);
+  //Serial.begin(115200);
   pinMode(MOTION_SENSOR, INPUT);
   pinMode(SOUND_TRIGGER, OUTPUT);
+
+  attachInterrupt(digitalPinToInterrupt(MOTION_SENSOR), motionDetected, RISING);
 
   strip.begin();
   strip.setBrightness(30);
@@ -35,22 +37,15 @@ void setup() {
 }
 
 void loop() {
-  int motionSensor = digitalRead(MOTION_SENSOR);
-  if ((motionSensor == HIGH) && (hooting == false))
-  {
+}
+
+void motionDetected() {
     digitalWrite(STATUS_LED, HIGH);    
     digitalWrite(SOUND_TRIGGER, HIGH);
     rainbowEyes(20);
     eyesOff(20);
-    digitalWrite(SOUND_TRIGGER, LOW);
-    hooting = true;
-  }
-  else if ((motionSensor == LOW) && (hooting == true))
-  {
+    digitalWrite(SOUND_TRIGGER, LOW); 
     digitalWrite(STATUS_LED, LOW);
-    hooting = false;
-  }
-  delay(60);
 }
 
 void rainbowEyes(uint8_t wait) {
